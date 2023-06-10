@@ -83,7 +83,7 @@ app.get('/api/all_number/:country', async (req, res) => {
     }
 });
 
-app.get('/working', (req, res) => {
+app.get('/api/working', (req, res) => {
     res.send('yes, I am working');
 });
 
