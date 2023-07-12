@@ -2,7 +2,7 @@ require('dotenv').config()
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const port = 100;
+const port = 2022;
 const { Pool } = require('pg');
 
 const pool = new Pool({
@@ -15,6 +15,10 @@ const pool = new Pool({
 
 app.use(cors());
 app.use(express.json());
+
+app.get('/', (req, res) => {
+    res.send('yes, I am working');
+});
 
 app.get('/api/all', async (req, res) => {
     try {
@@ -55,10 +59,13 @@ app.get('/api/:country', async (req, res) => {
     }
 });
 
-app.get('/api/all_number', async (req, res) => {
+
+app.get('/total', async (req, res) => {
     try {
         const client = await pool.connect();
-        const result = await client.query("SELECT COUNT(*) FROM job_posts");
+        const result = await client.query(
+            `SELECT COUNT(*) FROM job_posts`
+        );
         res.json(result.rows[0].count);
         client.release();
     } catch (err) {
@@ -83,9 +90,7 @@ app.get('/api/all_number/:country', async (req, res) => {
     }
 });
 
-app.get('/api/working', (req, res) => {
-    res.send('yes, I am working');
-});
+
 
 
 app.listen(port, () => {
