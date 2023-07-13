@@ -16,7 +16,7 @@ const pool = new Pool({
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
     res.send('yes, I am working');
 });
 
@@ -59,12 +59,13 @@ app.get('/api/:country', async (req, res) => {
     }
 });
 
-
-app.get('/total', async (req, res) => {
+app.get('/api/all_number/:country', async (req, res) => {
+    const { country } = req.params;
     try {
         const client = await pool.connect();
         const result = await client.query(
-            `SELECT COUNT(*) FROM job_posts`
+            `SELECT COUNT(*) FROM job_posts WHERE country = $1`, 
+            [country]
         );
         res.json(result.rows[0].count);
         client.release();
@@ -74,13 +75,11 @@ app.get('/total', async (req, res) => {
     }
 });
 
-app.get('/api/all_number/:country', async (req, res) => {
-    const { country } = req.params;
+app.get('/api/get/total', async (req, res) => {
     try {
         const client = await pool.connect();
         const result = await client.query(
-            `SELECT COUNT(*) FROM job_posts WHERE country = $1`, 
-            [country]
+            `SELECT COUNT(*) FROM job_posts`
         );
         res.json(result.rows[0].count);
         client.release();
