@@ -26,9 +26,9 @@ app.get('/api/all', async (req, res) => {
         const limit = 25
         const offset = (page - 1) * limit
         const client = await pool.connect();
-        // const result = await client.query("SELECT * FROM job_posts")
-         const result = await client.query(
-            `SELECT * FROM job_posts ORDER BY id ASC LIMIT ${limit} OFFSET ${offset}`
+        const result = await client.query(
+            `SELECT * FROM job_posts ORDER BY id DESC LIMIT $1 OFFSET $2`,
+            [limit, offset]
         )
         // // /   const result = await client.query('SELECT * FROM posts WHERE post_date >= NOW() - INTERVAL \'1 day\'');
         res.json(result.rows);
@@ -48,8 +48,8 @@ app.get('/api/:country', async (req, res) => {
     try {
         const client = await pool.connect();
         const result = await client.query(
-            `SELECT * FROM job_posts WHERE country = $1 ORDER BY id ASC LIMIT ${limit} OFFSET ${offset}`,
-            [country]
+            `SELECT * FROM job_posts WHERE country = $1 ORDER BY id ASC LIMIT $2 OFFSET $3`,
+            [country, limit, offset]
         );
         res.json(result.rows);
         client.release();
