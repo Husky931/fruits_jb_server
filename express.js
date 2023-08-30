@@ -89,6 +89,23 @@ app.get('/api/get/total', async (req, res) => {
     }
 });
 
+app.get('/api/job/:id', async (req, res) => { 
+    const { id } = req.params;
+    console.log(id);
+    try {
+        const client = await pool.connect();
+        const result = await client.query(
+            `SELECT * FROM job_posts WHERE id = $1`,
+            [id]
+        );
+        res.json(result.rows[0]);
+        client.release();
+    } catch (err) {
+        console.error(err);
+        res.send("Error " + err);
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
