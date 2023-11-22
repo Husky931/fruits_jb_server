@@ -48,7 +48,7 @@ app.get('/api/:country', async (req, res) => {
     try {
         const client = await pool.connect();
         const result = await client.query(
-            `SELECT * FROM job_posts WHERE country = $1 ORDER BY id ASC LIMIT $2 OFFSET $3`,
+            `SELECT * FROM job_posts WHERE country = $1 ORDER BY id DESC LIMIT $2 OFFSET $3`,
             [country, limit, offset]
         );
         res.json(result.rows);
